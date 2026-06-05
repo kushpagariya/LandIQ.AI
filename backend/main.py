@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime, timezone
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from pymongo.database import Database
 from app.core.config import settings
 from app.core.logging import setup_logging
@@ -14,6 +15,15 @@ app = FastAPI(
     title=settings.PROJECT_NAME,
     debug=settings.DEBUG,
     version="1.0.0"
+)
+
+# CORS middleware — allow frontend dev server
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Startup event to load model and resources
