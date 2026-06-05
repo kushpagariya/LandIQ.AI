@@ -111,11 +111,11 @@ Liabilities: None."""
 
         # Fill default placeholders if regex missed
         if not extracted["survey_number"]:
-            extracted["survey_number"] = "45/A/1"
+            extracted["survey_number"] = None
         if extracted["total_area_hectares"] is None:
-            extracted["total_area_hectares"] = 1.83
+            extracted["total_area_hectares"] = None
         if not extracted["owners"]:
-            extracted["owners"] = ["Ramesh Tukaram Kalbhor", "Suresh Tukaram Kalbhor"]
+            extracted["owners"] = []
 
         return extracted
 

@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from fastapi import FastAPI, Depends
 from pymongo.database import Database
 from app.core.config import settings
@@ -70,7 +70,7 @@ def health_check(db: Database = Depends(get_db)) -> dict:
 
     return {
         "status": status,
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "services": {
             "database": db_status,
             "ocr_engine": "ready" if ocr_ready else "not_ready",

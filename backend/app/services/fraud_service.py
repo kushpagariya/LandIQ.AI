@@ -148,15 +148,29 @@ class FraudService:
         elif risk_score >= 30:
             overall_risk = "medium"
             
+        rule_reasons = {
+            "FR-01": "document extracted area mismatch",
+            "FR-02": "owner name mismatch",
+            "FR-03": "multiple joint owners",
+            "FR-04": "missing mandatory documents",
+            "FR-05": "share balance mismatch"
+        }
+        triggered_reasons = [rule_reasons.get(r, r) for r in triggered_rules]
+            
         return {
             "property_id": property_id,
             "overall_fraud_risk": overall_risk,
             "risk_score": risk_score,
             "triggered_rules": triggered_rules,
+            "triggered_reasons": triggered_reasons,
             "indicators": indicators
         }
         
     def _levenshtein_similarity(self, s1: str, s2: str) -> float:
+        if s1 is None:
+            s1 = ""
+        if s2 is None:
+            s2 = ""
         s1, s2 = s1.lower().strip(), s2.lower().strip()
         if not s1 or not s2:
             return 0.0

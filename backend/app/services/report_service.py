@@ -14,6 +14,11 @@ from app.services.trust_service import trust_service
 
 logger = logging.getLogger("landiq_backend")
 
+INR_PER_LAKH = 100000.0
+
+class ReportGenerationError(Exception):
+    pass
+
 class ReportService:
     def generate_report(self, property_id: str, db: Database) -> dict:
         prop_repo = MongoRepository(db, "properties")
@@ -35,20 +40,16 @@ class ReportService:
         if prop.get("takeover_risk") == 1:
             risk_flags.append("Takeover Risk: High takeover risk flagged on this property.")
             
-        est_val_lakhs = val_res["estimated_market_value_inr"] / 100000.0
+        est_val_lakhs = val_res["estimated_market_value_inr"] / INR_PER_LAKH
         trust_rating = trust_res["rating_classification"].replace("_", " ")
         trust_score = trust_res["trust_score"]
         
-        reasons_list = []
-        if "FR-04" in fraud_res["triggered_rules"]:
-            reasons_list.append("missing mandatory documents")
-        if "FR-03" in fraud_res["triggered_rules"]:
-            reasons_list.append("multiple joint owners")
+        reasons_list = list(fraud_res.get("triggered_reasons", []))
         if prop.get("takeover_risk") == 1:
             reasons_list.append("high takeover risk")
             
         reasons_str = " but exhibits minor risks due to " + ", ".join(reasons_list) if reasons_list else " and exhibits no major risks."
-        summary = f"The property in {prop['village']}, Nashik, is valued at approximately ₹{est_val_lakhs:.2f} Lakhs. It has a {trust_rating} trust rating ({trust_score}/100){reasons_str}."
+        summary = f"The property in {prop['village']}, {prop['taluka']}, {prop['district']}, is valued at approximately ₹{est_val_lakhs:.2f} Lakhs. It has a {trust_rating} trust rating ({trust_score}/100){reasons_str}."
 
         # 2. Render HTML using Jinja2
         templates_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "templates")
@@ -72,8 +73,31 @@ class ReportService:
         
         # 4. Compile HTML to PDF using WeasyPrint
         logger.info(f"Compiling PDF report to {pdf_path}...")
-        HTML(string=html_content).write_pdf(pdf_path)
-        logger.info("PDF report compiled successfully.")
+        try:
+            HTML(string=html_content).write_pdf(pdf_path)
+            logger.info("PDF report compiled successfully.")
+        except Exception as e:
+            logger.error(
+                f"WeasyPrint failed: HTML(string=html_content).write_pdf({pdf_path}) "
+                f"raised exception: {str(e)}. Context: html_content hash={hash(html_content)}"
+            )
+            if os.path.exists(pdf_path):
+                try:
+                    os.remove(pdf_path)
+                except Exception:
+                    pass
+            # Create Database record with failed status
+            report_data = {
+                "id": report_id,
+                "property_id": property_id,
+                "file_path": pdf_path,
+                "status": "failed",
+                "trust_score": trust_res["trust_score"],
+                "created_at": datetime.utcnow(),
+                "expired_at": None
+            }
+            report_repo.create(report_data)
+            raise ReportGenerationError(f"WeasyPrint PDF compilation failed: {str(e)}")
         
         # 5. Create Database record
         report_data = {

@@ -8,6 +8,6 @@ class Report(BaseModel):
     property_id: str
     file_path: str
     status: str = "generating"
-    trust_score: int
+    trust_score: int = Field(..., ge=0, le=100)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     expired_at: Optional[datetime] = None

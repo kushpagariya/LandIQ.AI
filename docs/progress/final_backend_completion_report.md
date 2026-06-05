@@ -81,3 +81,25 @@ This document provides the final verification report for the LandIQ AI backend i
 2. **Local Registry Checks**: External government registry APIs are bypassed/simulated using fuzzy Levenshtein similarity matching (>= 0.80) against local document OCR results.
 3. **Region Constraints**: Inputs are validated and constrained to "Maharashtra" and the "Nashik" district to match the model training parameters.
 4. **OCR Setup**: EasyOCR requires downloading language model weights on first boot. The application is built with a hybrid fallback that tries EasyOCR first, then Pytesseract, and finally uses a simulated Marathi 7/12 layout parser to guarantee 100% demo-proof execution.
+
+---
+
+## Recent Security & Robustness Fixes (June 2026)
+
+- **PII Compliance & Audit Logging**:
+  - Encrypted and anonymized client IP addresses in the audit log collection using a deterministic one-way SHA-256 hash wrapped with a base64 layer and `SECRET_KEY` salting.
+  - Wired a consent check (`USER_CONSENT_GIVEN`) and feature flag (`STORE_IP_ADDRESSES`) into the logging path.
+  - Implemented an automated database retention purge routine (`purge_old_audit_logs`) to delete old logs beyond 90 days.
+- **Improved Field Constraints**:
+  - Bound `share_percentage` in `OwnershipRecord` to [0.0, 100.0].
+  - Bound `confidence_score` in `Prediction` to [0.0, 1.0].
+  - Bound `trust_score` in `Report` to [0, 100].
+- **Robust Datetime Handling**:
+  - Migrated deprecated naive datetime usages (`datetime.utcnow()`) to timezone-aware UTC datetime (`datetime.now(timezone.utc)`) in the `Property`, `User`, and `Report` schemas, as well as the health status output.
+- **Math & Division Safety Guards**:
+  - Guarded the ML Valuation classification ratio calculation against division by zero or negative values.
+  - Implemented precise two-decimal share distribution for joint owners (`base_share` allocated to first $n-1$ owners and remainder to the last owner) to guarantee total shares sum to exactly 100.00%.
+- **Robust Error & Exception Handlers**:
+  - Wrapped WeasyPrint HTML to PDF compilation in a `try/except` block to log error details, delete incomplete temporary PDF fragments on disk, mark the report status to `failed` in the database, and raise a clean `ReportGenerationError`.
+  - Guarded against empty report list queries and missing property links in report retrieval and upload pipelines.
+  - Fixed NameError and LabelEncoder mapping overwrites in training/ML model scripts.

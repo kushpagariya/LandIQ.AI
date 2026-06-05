@@ -136,13 +136,17 @@ class MLValuationService:
         asking_price = property_data.get("asking_price")
         if asking_price is not None:
             asking_price = float(asking_price)
-            ratio = asking_price / estimated_value
-            if ratio < 0.85:
-                classification = "undervalued"
-            elif ratio > 1.15:
-                classification = "overvalued"
+            if estimated_value is None or estimated_value <= 0:
+                logger.warning(f"Invalid estimated_value: {estimated_value}. Cannot compute classification ratio.")
+                classification = "unknown"
             else:
-                classification = "fair"
+                ratio = asking_price / estimated_value
+                if ratio < 0.85:
+                    classification = "undervalued"
+                elif ratio > 1.15:
+                    classification = "overvalued"
+                else:
+                    classification = "fair"
         else:
             classification = "fair"
 

@@ -96,20 +96,26 @@ def analyze_property(property_in: PropertyCreate, request: Request, db: Database
         
         # 7. Log Audit Trail
         audit_repo = MongoRepository(db, "audit_logs")
-        audit_repo.create({
-            "id": str(uuid4()),
-            "user_id": "00000000-0000-0000-0000-000000000000",
-            "action": "RUN_ANALYSIS",
-            "target_table": "properties",
-            "target_id": property_id,
-            "timestamp": datetime.utcnow(),
-            "ip_address": request.client.host if request.client else "127.0.0.1",
-            "changes": {
+        from app.models.audit_log import AuditLog, purge_old_audit_logs
+        
+        audit_entry = AuditLog(
+            user_id="00000000-0000-0000-0000-000000000000",
+            action="RUN_ANALYSIS",
+            target_table="properties",
+            target_id=property_id,
+            ip_address=request.client.host if request.client else "127.0.0.1",
+            changes={
                 "predicted_value_inr": val_res["estimated_market_value_inr"],
                 "trust_score": trust_score,
                 "overall_fraud_risk": fraud_res["overall_fraud_risk"]
             }
-        })
+        )
+        audit_repo.create(audit_entry.dict())
+        
+        try:
+            purge_old_audit_logs(db)
+        except Exception as e:
+            logger.warning(f"Failed to purge old audit logs: {e}")
         
         return {
             "property_id": property_id,

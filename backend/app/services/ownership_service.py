@@ -47,15 +47,20 @@ class OwnershipService:
             
         # Compare names
         for owner in owners:
-            provided_name = owner.get("owner_name")
+            provided_name = (owner.get("owner_name") or "").strip()
+            if not provided_name:
+                continue
             best_match = None
             best_similarity = 0.0
             
             for doc_name in doc_owner_names:
-                sim = self._levenshtein_similarity(provided_name, doc_name)
+                doc_name_str = (doc_name or "").strip()
+                if not doc_name_str:
+                    continue
+                sim = self._levenshtein_similarity(provided_name, doc_name_str)
                 if sim > best_similarity:
                     best_similarity = sim
-                    best_match = doc_name
+                    best_match = doc_name_str
                     
             if best_similarity >= 0.80:
                 matches.append({
@@ -67,7 +72,7 @@ class OwnershipService:
                 owner_repo.update(owner["id"], {
                     "verification_status": "verified",
                     "verified_at": last_checked,
-                    "encumbrances": {
+                    "verification_metadata": {
                         "match_confidence": round(best_similarity, 2)
                     }
                 })

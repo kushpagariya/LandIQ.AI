@@ -7,15 +7,27 @@ from app.database.repository import MongoRepository
 
 logger = logging.getLogger("landiq_backend")
 
+# Named constants for weights and thresholds
+WEIGHT_DOC = 0.35
+WEIGHT_FRAUD = 0.30
+WEIGHT_VAL = 0.20
+WEIGHT_DATA = 0.15
+
+THRESHOLD_HIGH = 90
+THRESHOLD_TRUSTWORTHY = 75
+THRESHOLD_MODERATE = 50
+
 class TrustService:
     def calculate_trust_score(self, property_data: dict, db: Database) -> dict:
         property_id = property_data.get("id")
-        
+        if not property_id:
+            raise ValueError("property_id is required to calculate trust score")
+            
         doc_repo = MongoRepository(db, "documents")
         owner_repo = MongoRepository(db, "ownership_records")
         
-        docs = doc_repo.list({"property_id": property_id}) if property_id else []
-        owners = owner_repo.list({"property_id": property_id}) if property_id else []
+        docs = doc_repo.list({"property_id": property_id})
+        owners = owner_repo.list({"property_id": property_id})
         
         # 1. Document Consistency Score (S_doc)
         s_doc = 0
@@ -30,11 +42,12 @@ class TrustService:
                     has_mismatch = True
                     break
                 elif status == "verified":
-                    has_verified = True
-                    encumbrances = owner.get("encumbrances") or {}
-                    similarity = encumbrances.get("match_confidence", 1.0)
+                    # Access verification metadata (match info) instead of encumbrances to get match confidence
+                    verification = owner.get("verification_metadata") or owner.get("match_info") or {}
+                    similarity = verification.get("match_confidence", 1.0)
                     if similarity < 1.0:
                         has_fuzzy = True
+                    has_verified = True
             
             if has_mismatch:
                 s_doc = 0
@@ -67,15 +80,15 @@ class TrustService:
                 provided_count += 1
         s_data = int((provided_count / len(optional_fields)) * 100)
         
-        # Trust Score calculation
-        trust_score_val = (0.35 * s_doc) + (0.30 * s_fraud) + (0.20 * s_val) + (0.15 * s_data)
+        # Trust Score calculation using named constants
+        trust_score_val = (WEIGHT_DOC * s_doc) + (WEIGHT_FRAUD * s_fraud) + (WEIGHT_VAL * s_val) + (WEIGHT_DATA * s_data)
         trust_score = int(round(trust_score_val))
         
-        if trust_score >= 90:
+        if trust_score >= THRESHOLD_HIGH:
             classification = "highly_trustworthy"
-        elif trust_score >= 75:
+        elif trust_score >= THRESHOLD_TRUSTWORTHY:
             classification = "trustworthy"
-        elif trust_score >= 50:
+        elif trust_score >= THRESHOLD_MODERATE:
             classification = "moderate"
         else:
             classification = "high_risk"

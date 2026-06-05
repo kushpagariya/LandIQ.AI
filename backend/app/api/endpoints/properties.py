@@ -298,7 +298,12 @@ def download_report_pdf(property_id: UUID, db: Database = Depends(get_db)):
         )
     
     # Sort in python (created_at is datetime)
-    reports.sort(key=lambda x: x.get("created_at"), reverse=True)
+    reports.sort(key=lambda x: x.get("created_at") or datetime.min, reverse=True)
+    if not reports:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"No report found for property {property_id}."
+        )
     latest_report = reports[0]
     
     file_path = latest_report.get("file_path")

@@ -12,14 +12,14 @@ df
 
 villages = df['Water_Source'].unique()
 
-for Water_Sources in sorted(Water_Source):
-    print(Water_Source)
+for village in sorted(villages):
+    print(village)
 
 print(df.info())
 
 from sklearn.preprocessing import LabelEncoder
 
-le = LabelEncoder()
+encoders = {}
 
 text_cols = [
     'Village',
@@ -30,7 +30,9 @@ text_cols = [
 ]
 
 for col in text_cols:
+    le = LabelEncoder()
     df[col] = le.fit_transform(df[col])
+    encoders[col] = le
 
 print(df.info())
 

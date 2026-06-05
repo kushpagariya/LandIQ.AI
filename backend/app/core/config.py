@@ -19,7 +19,18 @@ class Settings(BaseSettings):
     )
     
     # Security (Bypassed / Constant in MVP)
-    SECRET_KEY: str = Field("local_testing_secret_key_hackathon_2026", env="SECRET_KEY")
+    SECRET_KEY: str = Field("CHANGE_ME_IN_PRODUCTION", env="SECRET_KEY")
+    
+    # Compliance & Audit Retention settings
+    STORE_IP_ADDRESSES: bool = Field(True, env="STORE_IP_ADDRESSES")
+    USER_CONSENT_GIVEN: bool = Field(True, env="USER_CONSENT_GIVEN")
+    DATA_RETENTION_DAYS: int = Field(90, env="DATA_RETENTION_DAYS")
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.ENV != "development":
+            if not self.SECRET_KEY or self.SECRET_KEY == "CHANGE_ME_IN_PRODUCTION":
+                raise ValueError("SECRET_KEY must be explicitly set to a secure value in non-development environments")
     
     # File Storage
     UPLOAD_DIR: str = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "storage")

@@ -27,14 +27,24 @@ def process_document_task(document_id: str, file_path: str, file_type: str, db_n
         owner_repo = MongoRepository(db, "ownership_records")
         owner_repo.collection.delete_many({"document_id": document_id})
         
+        import math
         owners_list = extracted.get("owners", [])
         num_owners = len(owners_list)
-        share = round(100.0 / max(num_owners, 1), 2)
+        shares = []
+        if num_owners > 0:
+            base_share = math.floor(10000 / num_owners) / 100.0
+            for i in range(num_owners - 1):
+                shares.append(base_share)
+            last_share = round(100.0 - sum(shares), 2)
+            shares.append(last_share)
         
         doc_rec = doc_repo.get(document_id)
+        if not doc_rec or "property_id" not in doc_rec:
+            raise ValueError(f"Document {document_id} not found or missing property_id.")
         property_id = doc_rec["property_id"]
         
-        for owner_name in owners_list:
+        for idx, owner_name in enumerate(owners_list):
+            share = shares[idx]
             owner_repo.create({
                 "id": str(uuid4()),
                 "property_id": property_id,
@@ -43,7 +53,7 @@ def process_document_task(document_id: str, file_path: str, file_type: str, db_n
                 "share_percentage": share,
                 "holding_type": "joint" if num_owners > 1 else "sole",
                 "acquisition_date": None,
-                "encumbrances": {
+                "verification_metadata": {
                     "match_confidence": 1.0
                 },
                 "verification_status": "pending",
