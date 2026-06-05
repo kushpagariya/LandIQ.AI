@@ -1,3 +1,16 @@
 fastapi>=0.115,<1.0
 uvicorn[standard]>=0.30,<1.0
-pytest>=8.0,<9.0
+pydantic>=2.0
+pydantic-settings
+pandas
+scikit-learn
+joblib
+jinja2
+weasyprint
+easyocr
+pytesseract
+pillow
+python-multipart
+pytest
+httpx
+pymongo

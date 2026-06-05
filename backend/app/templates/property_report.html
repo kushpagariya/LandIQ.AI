@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>LandIQ AI Due Diligence Report</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+            @bottom-right {
+                content: "Page " counter(page) " of " counter(pages);
+                font-size: 8pt;
+                color: #718096;
+            }
+        }
+        body {
+            font-family: Arial, sans-serif;
+            color: #2D3748;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            border-bottom: 2px solid #3182CE;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24pt;
+            color: #2B6CB0;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 5px 0 0 0;
+            color: #718096;
+            font-size: 10pt;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .section-title {
+            font-size: 14pt;
+            color: #2B6CB0;
+            border-bottom: 1px solid #E2E8F0;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        .meta-table th, .meta-table td {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid #E2E8F0;
+            font-size: 10pt;
+        }
+        .meta-table th {
+            color: #4A5568;
+            background-color: #F7FAFC;
+            font-weight: 600;
+            width: 40%;
+        }
+        .score-box {
+            background-color: #2B6CB0;
+            color: #FFFFFF;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .score-box h2 {
+            margin: 0;
+            font-size: 32pt;
+            font-weight: 700;
+        }
+        .score-box p {
+            margin: 5px 0 0 0;
+            font-size: 8pt;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+        .risk-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 9pt;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .risk-badge.low { background-color: #C6F6D5; color: #22543D; }
+        .risk-badge.medium { background-color: #FEFCBF; color: #744210; }
+        .risk-badge.high { background-color: #FED7D7; color: #742A2A; }
+        .risk-badge.fair { background-color: #C6F6D5; color: #22543D; }
+        .risk-badge.undervalued { background-color: #FEFCBF; color: #744210; }
+        .risk-badge.overvalued { background-color: #FED7D7; color: #742A2A; }
+        
+        .flag-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .flag-list li {
+            font-size: 10pt;
+            margin-bottom: 5px;
+            color: #C53030;
+        }
+        .summary-box {
+            background-color: #EBF8FF;
+            border-left: 4px solid #3182CE;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 10.5pt;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>LandIQ AI Due Diligence Report</h1>
+        <p>Property Intelligence & Legal Risk Analysis Report</p>
+    </div>
+
+    <div class="summary-box">
+        <strong>Executive Summary:</strong> {{ summary }}
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+        <tr style="vertical-align: top;">
+            <td style="width: 65%; padding-right: 20px;">
+                <div class="section-title">Property Details</div>
+                <table class="meta-table">
+                    <tr>
+                        <th>Survey Number</th>
+                        <td>{{ prop.survey_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Location</th>
+                        <td>{{ prop.village }}, {{ prop.taluka }}, {{ prop.district }}, {{ prop.state }}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Area</th>
+                        <td>{{ prop.area_acre }} Acres</td>
+                    </tr>
+                    <tr>
+                        <th>Soil Type / Quality</th>
+                        <td>{{ prop.soil_type }} / {{ prop.soil_quality_score }} out of 10</td>
+                    </tr>
+                    <tr>
+                        <th>Irrigated</th>
+                        <td>{{ 'Yes' if prop.irrigated == 1 else 'No' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Water Source</th>
+                        <td>{{ prop.water_source }}</td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width: 35%;">
+                <div class="score-box">
+                    <h2>{{ trust.trust_score }}</h2>
+                    <p>Trust Score (0-100)</p>
+                    <div style="margin-top: 10px; font-weight: 600; font-size: 10pt;">
+                        {{ trust.rating_classification.replace('_', ' ').upper() }}
+                    </div>
+                </div>
+                
+                <div style="background-color: #F7FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 15px;">
+                    <h3 style="margin-top: 0; font-size: 11pt; color: #4A5568;">Analysis Scores</h3>
+                    <div style="font-size: 9.5pt; line-height: 1.8;">
+                        <div>Document Match: <strong>{{ trust.breakdown.document_verification }}/100</strong></div>
+                        <div>Fraud Risk Index: <strong>{{ trust.breakdown.fraud_risk_factor }}/100</strong></div>
+                        <div>Valuation Confidence: <strong>{{ trust.breakdown.valuation_confidence }}/100</strong></div>
+                        <div>Data Completeness: <strong>{{ trust.breakdown.data_completeness }}/100</strong></div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="section-title">Market Valuation Analysis</div>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+        <tr>
+            <td style="width: 50%; padding-right: 10px;">
+                <div style="background-color: #F7FAFC; padding: 15px; border-radius: 8px; border: 1px solid #E2E8F0;">
+                    <div style="font-size: 9pt; color: #718096; text-transform: uppercase;">Estimated Market Value</div>
+                    <div style="font-size: 18pt; font-weight: 700; color: #2B6CB0; margin-top: 5px;">₹{{ "{:,.2f}".format(val.estimated_market_value_inr) }}</div>
+                    <div style="font-size: 9.5pt; margin-top: 5px;">Price Per Acre: <strong>₹{{ "{:,.2f}".format(val.price_per_acre_inr) }}</strong></div>
+                </div>
+            </td>
+            <td style="width: 50%; padding-left: 10px;">
+                <div style="background-color: #F7FAFC; padding: 15px; border-radius: 8px; border: 1px solid #E2E8F0;">
+                    <div style="font-size: 9pt; color: #718096; text-transform: uppercase;">Asking Price Status</div>
+                    <div style="font-size: 18pt; font-weight: 700; color: #2D3748; margin-top: 5px;">
+                        {% if prop.asking_price %}
+                            ₹{{ "{:,.2f}".format(prop.asking_price) }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </div>
+                    <div style="font-size: 9.5pt; margin-top: 5px;">Valuation Status: <span class="risk-badge {{ val.valuation_classification }}">{{ val.valuation_classification }}</span></div>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <div class="section-title">Fraud & Legal Risk Assessment</div>
+    <table class="meta-table">
+        <tr>
+            <th>Overall Fraud Risk</th>
+            <td>
+                <span class="risk-badge {{ fraud.overall_fraud_risk }}">
+                    {{ fraud.overall_fraud_risk }}
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <th>Triggered Risk Flags</th>
+            <td>
+                {% if risk_flags %}
+                    <ul class="flag-list">
+                        {% for flag in risk_flags %}
+                            <li>{{ flag }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <span style="color: #2F855A; font-weight: 600;">No risk flags triggered.</span>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+    
+    <div style="margin-top: 30px; font-size: 8pt; color: #A0AEC0; text-align: center; border-top: 1px solid #E2E8F0; padding-top: 10px;">
+        This report is generated dynamically by LandIQ.AI land intelligence model. The report is simulated for MVP evaluation and hackathon demo.
+    </div>
+</body>
+</html>
