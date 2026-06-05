@@ -1,9 +1,30 @@
 import { motion } from 'framer-motion'
 import { Bell, Download, CheckCircle, AlertCircle, TrendingUp } from 'lucide-react'
+import { jsPDF } from 'jspdf'
 import Sidebar from '../components/Sidebar'
 import CircularProgress from '../components/CircularProgress'
 
 export default function Dashboard() {
+  const handleExportPdf = () => {
+    try {
+      const pdf = new jsPDF()
+      pdf.setFontSize(18)
+      pdf.text('LandIQ AI Analysis Report', 14, 18)
+      pdf.setFontSize(12)
+      pdf.text('Parcel ID: 894-A2-XYZ', 14, 30)
+      pdf.text('Location: Maharashtra, India', 14, 38)
+      pdf.text('Predicted Price Per Acre: ₹ 5,44,485', 14, 50)
+      pdf.text('Total Land Value: ₹ 67,51,614', 14, 58)
+      pdf.text('Confidence Score: 98.8%', 14, 66)
+      pdf.text('Ownership Risk: LOW', 14, 78)
+      pdf.text('Legal Risk: HIGH', 14, 86)
+      pdf.text('Transaction Risk: MODERATE', 14, 94)
+      pdf.save('landiq-ai-analysis-report.pdf')
+    } catch (error) {
+      console.error('Failed to export PDF', error)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       <Sidebar activePage="dashboard" />
@@ -15,7 +36,11 @@ export default function Dashboard() {
             <h1 className="text-2xl font-bold text-gray-900">AI Analysis Results</h1>
             <p className="text-sm text-gray-600">Parcel ID: 894-A2-XYZ • Maharashtra, India</p>
           </div>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition">
+          <button
+            type="button"
+            onClick={handleExportPdf}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium flex items-center gap-2 transition"
+          >
             <Download className="w-5 h-5" />
             Export PDF
           </button>
@@ -99,7 +124,7 @@ export default function Dashboard() {
                 <h3 className="font-bold text-gray-900">Legal Risk</h3>
                 <span className="bg-red-100 text-red-700 text-xs font-semibold px-2 py-1 rounded">HIGH</span>
               </div>
-              <p className="text-sm text-gray-600">Pending litigation detected regarding eastern boundary encachment (Case #442-B).</p>
+              <p className="text-sm text-gray-600">Pending litigation detected regarding eastern boundary encroachment (Case #442-B).</p>
             </motion.div>
 
             <motion.div

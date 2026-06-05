@@ -4,6 +4,7 @@ import { MapPin, Shield, TrendingUp, AlertTriangle, BarChart3, FileText, ArrowRi
 
 export default function LandingPage() {
   const navigate = useNavigate()
+  const currentYear = new Date().getFullYear()
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
@@ -22,8 +23,6 @@ export default function LandingPage() {
           </div>
           <div className="hidden md:flex gap-8">
             <a href="#features" className="text-gray-600 hover:text-gray-900 font-medium">Features</a>
-            <a href="#solutions" className="text-gray-600 hover:text-gray-900 font-medium">Solutions</a>
-            <a href="#impact" className="text-gray-600 hover:text-gray-900 font-medium">Impact</a>
           </div>
           <button
             onClick={() => navigate('/property-analysis')}
@@ -66,7 +65,11 @@ export default function LandingPage() {
               >
                 Analyze Property <ArrowRight className="w-5 h-5" />
               </motion.button>
-              <button className="border-2 border-gray-300 hover:border-gray-400 text-gray-700 px-8 py-3 rounded-lg font-semibold transition">
+              <button
+                type="button"
+                onClick={() => navigate('/reports')}
+                className="border-2 border-gray-300 hover:border-gray-400 text-gray-700 px-8 py-3 rounded-lg font-semibold transition"
+              >
                 📊 View Demo Report
               </button>
             </div>
@@ -194,7 +197,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 py-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p>&copy; 2024 LandIQ AI. Advanced land valuation powered by artificial intelligence.</p>
+          <p>&copy; {currentYear} LandIQ AI. Advanced land valuation powered by artificial intelligence.</p>
         </div>
       </footer>
     </div>

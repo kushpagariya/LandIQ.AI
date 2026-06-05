@@ -17,4 +17,3 @@ backend/**/*.pyo
 *.log
 .env
 .env.*
-package-lock.json
