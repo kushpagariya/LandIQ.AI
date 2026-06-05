@@ -1,0 +1,1 @@
+"""Database models for the LandIQ AI backend."""

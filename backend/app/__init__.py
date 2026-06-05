@@ -1,0 +1,1 @@
+"""LandIQ AI backend application package."""

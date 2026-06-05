@@ -1,0 +1,1 @@
+"""Machine learning assets for the LandIQ AI backend."""
