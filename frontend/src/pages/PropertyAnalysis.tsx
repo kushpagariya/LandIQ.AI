@@ -16,6 +16,7 @@ export default function PropertyAnalysis() {
     distanceToHighway: '',
     soilType: '',
     soilQuality: '',
+    landType: '',
     irrigated: '',
     waterSource: '',
     roadTouch: '',
@@ -28,6 +29,19 @@ export default function PropertyAnalysis() {
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target
+
+    if (name === 'soilQuality') {
+      if (value === '') {
+        setFormData(prev => ({ ...prev, soilQuality: '' }))
+        return
+      }
+
+      const parsed = Number(value)
+      const clamped = Math.min(10, Math.max(0, parsed))
+      setFormData(prev => ({ ...prev, soilQuality: String(clamped) }))
+      return
+    }
+
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
@@ -115,9 +129,11 @@ export default function PropertyAnalysis() {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option>Select Taluka</option>
+                        <option>Chandwad</option>
                         <option>Nashik</option>
+                        <option>Niphad</option>
                         <option>Sinnar</option>
-                        <option>Murbad</option>
+                        <option>Yeola</option>
                       </select>
                     </div>
                     <div>
@@ -129,9 +145,102 @@ export default function PropertyAnalysis() {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option>Select Village</option>
-                        <option>Village A</option>
-                        <option>Village B</option>
-                        <option>Village C</option>
+                        <option>Abhona</option>
+                        <option>Adgaon</option>
+                        <option>Ambad</option>
+                        <option>Anandwalli</option>
+                        <option>Bhojapur</option>
+                        <option>Borgaon</option> 
+                        <option>Borwadi</option>
+                        <option>Chandanpuri</option>
+                        <option>Chandori</option>
+                        <option>Chandrapur</option>
+                        <option>Chandwad</option>
+                        <option>Chinchpada</option>
+                        <option>Darna</option>
+                        <option>Deher</option>
+                        <option>Deolali</option>
+                        <option>Devdhari</option>
+                        <option>Devpur</option>
+                        <option>Dhodambe</option>
+                        <option>Dwarka</option>
+                        <option>Gangapur</option>
+                        <option>Girnare</option>
+                        <option>Harsul</option>
+                        <option>Jategaon</option>
+                        <option>Kadwa</option>
+                        <option>Kalwan</option>
+                        <option>Karanjkhed</option>
+                        <option>Karanjwan</option>
+                        <option>Kasarwadi</option>
+                        <option>Kasbe Sukene</option>
+                        <option>Kelzar</option>
+                        <option>Khambale</option>
+                        <option>Khamgaon</option>
+                        <option>Kherwadi</option>
+                        <option>Kotamgaon</option>
+                        <option>Lasalgaon</option>
+                        <option>Malegaon</option>
+                        <option>Mangi</option>
+                        <option>Manur</option>
+                        <option>Mhasrul</option>
+                        <option>Mohadi</option>
+                        <option>Mulegaon</option>
+                        <option>Mungse</option>
+                        <option>Nagarsul</option>
+                        <option>Nampur</option>
+                        <option>Nandgaon</option>
+                        <option>Nandur</option>
+                        <option>Nandur Madhyameshwar</option>
+                        <option>Nashik Road</option>
+                        <option>Nimgaon</option>
+                        <option>Niphad</option>
+                        <option>Ozar</option>
+                        <option>Pachegaon</option>
+                        <option>Pale</option>
+                        <option>Palkhed</option>
+                        <option>Panchak</option>
+                        <option>Pandavleni</option>
+                        <option>Pathardi</option>
+                        <option>Peth</option>
+                        <option>Pimpalgaon Baswant</option>
+                        <option>Pimpalgaon Dohe</option>
+                        <option>Pimpalgaon Khamb</option>
+                        <option>Pimpalgaon Rotha</option>
+                        <option>Pimpri</option>
+                        <option>Pimpri Kadu</option>
+                        <option>Raipur</option>
+                        <option>Saikheda</option>
+                        <option>Saptashringi</option>
+                        <option>Satpur</option>
+                        <option>Saundane</option>
+                        <option>Savargaon</option>
+                        <option>Shedbol</option>
+                        <option>Shirasgaon</option>
+                        <option>Shirsathe</option>
+                        <option>Sinnar</option>
+                        <option>Sonaj</option>
+                        <option>Talegaon</option>
+                        <option>Tambepada</option>
+                        <option>Tarsa</option>
+                        <option>Thengode</option>
+                        <option>Thergaon</option>
+                        <option>Trimbak Road</option>
+                        <option>Uchit</option>
+                        <option>Umbarkhed</option>
+                        <option>Umrane</option>
+                        <option>Vadgaon</option>
+                        <option>Vadner</option>
+                        <option>Vani</option>
+                        <option>Vinchur</option>
+                        <option>Vithapur</option>
+                        <option>Wadangali</option>
+                        <option>Wadivarhe</option>
+                        <option>Waghad</option>
+                        <option>Wakad</option>
+                        <option>Watane</option>
+                        <option>Wavi</option>
+                        <option>Yeola</option>
                       </select>
                     </div>
                     <div>
@@ -173,21 +282,39 @@ export default function PropertyAnalysis() {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option>Select Soil Type</option>
-                        <option>Loamy</option>
-                        <option>Clayey</option>
-                        <option>Sandy</option>
+                        <option>Black</option>
+                        <option>Red</option>
+                        <option>Black-Red</option>
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Soil Quality Score (0-100)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Soil Quality Score (0-10)</label>
                       <input
-                        type="text"
+                        type="number"
                         name="soilQuality"
-                        placeholder="e.g., 85"
+                        placeholder="e.g., 7"
                         value={formData.soilQuality}
+                        min={0}
+                        max={10}
+                        step={1}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Land Type</label>
+                      <select
+                        name="landType"
+                        value={formData.landType}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option>Select Land Type</option>
+                        <option>Agricultural Land</option>
+                        <option>Commercial Land</option>
+                        <option>Residential Land</option>
+                        <option>NA</option>
+                      </select>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Is Irrigated?</label>
@@ -211,9 +338,11 @@ export default function PropertyAnalysis() {
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option>Select Water Source</option>
-                        <option>Well</option>
+                        <option>Borewell</option>
                         <option>Canal</option>
-                        <option>Bore</option>
+                        <option>River</option>
+                        <option>Well</option>
+                        <option>None</option>
                       </select>
                     </div>
                   </div>
@@ -259,7 +388,7 @@ export default function PropertyAnalysis() {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Number of Owners</label>
                       <input
-                        type="text"
+                        type="number"
                         name="ownership"
                         placeholder="e.g., 1"
                         value={formData.ownership}
@@ -279,17 +408,16 @@ export default function PropertyAnalysis() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Takeover Risk (Low/Med/High)</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Takeover Risk</label>
                       <select
-                        name="takaoverRisk"
-                        value={formData.takaoverRisk}
+                        name="takeoverRisk"
+                        value={formData.takeoverRisk}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option>Select Risk Level</option>
-                        <option>Low</option>
-                        <option>Medium</option>
-                        <option>High</option>
+                        <option>Yes</option>
+                        <option>No</option>
                       </select>
                     </div>
                   </div>

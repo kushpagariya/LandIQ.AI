@@ -168,7 +168,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+      <section id="solutions" className="py-20 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -192,7 +192,7 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12">
+      <footer id="impact" className="bg-gray-900 text-gray-300 py-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <p>&copy; 2024 LandIQ AI. Advanced land valuation powered by artificial intelligence.</p>
         </div>
