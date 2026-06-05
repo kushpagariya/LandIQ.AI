@@ -1,34 +1,76 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { MapPin, BarChart3, Shield, FileText, Settings, HelpCircle, LogOut, Plus } from 'lucide-react'
 
-const items = [
-  { to: '/dashboard', label: 'Dashboard' },
-  { to: '/property', label: 'Property Analysis' },
-  { to: '/analytics', label: 'Analytics' },
-  { to: '/fraud', label: 'Fraud Detection' },
-  { to: '/reports', label: 'Reports' },
-  { to: '/landing', label: 'Landing' }
-]
+interface SidebarProps {
+  activePage: string
+}
 
-export default function Sidebar() {
+export default function Sidebar({ activePage }: SidebarProps) {
+  const navigate = useNavigate()
+
+  const menuItems = [
+    { icon: BarChart3, label: 'Dashboard', path: '/dashboard' },
+    { icon: MapPin, label: 'Property Analysis', path: '/property-analysis' },
+    { icon: BarChart3, label: 'Analytics', path: '/analytics' },
+    { icon: Shield, label: 'Fraud Detection', path: '/fraud-detection' },
+    { icon: FileText, label: 'Reports', path: '/reports' },
+  ]
+
   return (
-    <aside className="w-64 bg-white border-r border-gray-100 min-h-screen px-4 py-6 hidden md:flex flex-col">
-      <div className="mb-8 flex items-center gap-3">
-        <div className="w-10 h-10 bg-blue-600 rounded flex items-center justify-center text-white font-bold">L</div>
-        <div>
-          <div className="text-blue-600 font-bold text-xl">LandIQ AI</div>
-          <div className="text-xs text-gray-400">Geospatial Intel</div>
+    <div className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col">
+      {/* Logo */}
+      <div className="p-6 border-b border-gray-200">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+            <MapPin className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <p className="font-bold text-gray-900">LandIQ AI</p>
+            <p className="text-xs text-gray-500">Geospatial Intel</p>
+          </div>
         </div>
       </div>
-      <button className="mb-6 bg-blue-600 text-white py-2 px-4 rounded btn btn-primary">+ New Analysis</button>
-      <nav className="flex-1">
-        {items.map((it) => (
-          <NavLink key={it.to} to={it.to} className={({isActive}) => `block py-2 px-3 rounded mb-1 nav-link ${isActive? 'active':''}`}>
-            {it.label}
-          </NavLink>
+
+      {/* New Analysis Button */}
+      <div className="p-4">
+        <button
+          onClick={() => navigate('/property-analysis')}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition"
+        >
+          <Plus className="w-5 h-5" />
+          New Analysis
+        </button>
+      </div>
+
+      {/* Menu Items */}
+      <nav className="flex-1 px-3 py-4 space-y-1">
+        {menuItems.map((item) => (
+          <button
+            key={item.path}
+            onClick={() => navigate(item.path)}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
+              activePage === item.path.slice(1) || activePage === item.path.slice(1).replace('-', '')
+                ? 'bg-blue-100 text-blue-600'
+                : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            <item.icon className="w-5 h-5" />
+            <span className="font-medium">{item.label}</span>
+          </button>
         ))}
       </nav>
-      <div className="text-sm text-gray-500 mt-6">Support</div>
-    </aside>
+
+      {/* Bottom Menu */}
+      <div className="border-t border-gray-200 p-4 space-y-2">
+        <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition">
+          <HelpCircle className="w-5 h-5" />
+          <span className="text-sm font-medium">Support</span>
+        </button>
+        <button className="w-full flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition">
+          <LogOut className="w-5 h-5" />
+          <span className="text-sm font-medium">Sign Out</span>
+        </button>
+      </div>
+    </div>
   )
 }

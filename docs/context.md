@@ -4,16 +4,18 @@
 
 LandIQ AI is an AI-powered agricultural land intelligence platform.
 
+The platform helps buyers, investors, banks, NBFCs, and government agencies make safer land purchase decisions through:
+
+* Market Valuation
+* Ownership Intelligence
+* Legal Risk Assessment
+* Fraud Detection
+* Geographic Intelligence
+* Due Diligence Reporting
+
 The goal is not simply to estimate land prices.
 
-The goal is to help buyers, investors, banks, NBFCs, and government agencies make safer land purchase decisions by combining:
-
-* Market valuation
-* Ownership intelligence
-* Legal risk indicators
-* Fraud detection
-* Geographic intelligence
-* Professional due diligence reporting
+The goal is to reduce uncertainty before a land transaction.
 
 The platform should feel like a combination of:
 
@@ -22,67 +24,232 @@ The platform should feel like a combination of:
 * ArcGIS Intelligence
 * Zerodha Console
 
-The experience should communicate trust, intelligence, and professionalism.
+The user experience should communicate:
+
+* Trust
+* Intelligence
+* Transparency
+* Risk Awareness
+* Professionalism
+
+---
+
+# Problem Statement
+
+Land buyers often struggle to determine:
+
+* Whether a property is fairly priced
+* Whether ownership records appear trustworthy
+* Whether there are legal or transactional risks
+* Whether the surrounding market supports the asking price
+
+LandIQ AI provides an AI-assisted decision support system that generates valuation insights and risk intelligence before a purchase decision is made.
 
 ---
 
 # Target Demo Scenario
 
-A user enters land details.
+A user enters property details.
 
 The platform analyzes the property.
 
 The system returns:
 
 * Estimated Market Value
+* Price Per Acre
 * Price Classification
 * Confidence Score
 * Ownership Risk
 * Legal Risk
 * Fraud Indicators
+* Geographic Insights
 * Supporting Analytics
 
-The result should feel like an institutional-grade land intelligence report.
+The final output should feel like an institutional-grade land intelligence report.
 
 ---
 
-# Primary Design Goal
+# Primary Goal
 
 Optimize for:
 
 1. Hackathon Demo Quality
 2. Judge Experience
 3. Investor Pitch Readiness
-4. Clean Engineering Architecture
+4. User Experience
+5. Clean Engineering
 
 Do NOT optimize for:
 
-* Enterprise complexity
-* Premature microservices
+* Enterprise-scale architecture
+* Premature optimization
+* Microservices
+* Unnecessary abstractions
 * Overengineering
+
+---
+
+# Current Development Phase
+
+Current Phase:
+
+Frontend MVP
+
+Focus on:
+
+* Pixel-perfect UI
+* Navigation
+* Responsive layouts
+* Mock data integration
+* Smooth user experience
+* Reusable components
+
+Backend integration is not the priority right now.
+
+Assume all APIs are mocked.
+
+---
+
+# Technology Stack
+
+Frontend
+
+* React
+* Vite
+* Tailwind CSS
+* React Router DOM
+* Framer Motion
+* Recharts
+* Lucide React
+
+Backend
+
+* FastAPI
+
+Database
+
+* PostgreSQL
+
+Future Components
+
+* Neo4j
+* OCR Pipeline
+* GIS Services
+* Valuation Models
+* Fraud Detection Models
+
+---
+
+# Repository Structure
+
+```text
+LandIQ-AI/
+
+├── frontend/
+│
+│   ├── public/
+│   │
+│   ├── src/
+│   │
+│   │   ├── app/
+│   │   ├── routes/
+│   │   │
+│   │   ├── pages/
+│   │   │   ├── Landing/
+│   │   │   ├── PropertyAnalysis/
+│   │   │   ├── Dashboard/
+│   │   │   ├── Analytics/
+│   │   │   ├── FraudDetection/
+│   │   │   ├── PropertyLocation/
+│   │   │   ├── Reports/
+│   │   │   └── Settings/
+│   │   │
+│   │   ├── components/
+│   │   │
+│   │   │   ├── ui/
+│   │   │   ├── cards/
+│   │   │   ├── charts/
+│   │   │   ├── forms/
+│   │   │   ├── navigation/
+│   │   │   ├── maps/
+│   │   │   ├── reports/
+│   │   │   └── loaders/
+│   │   │
+│   │   ├── layouts/
+│   │   │
+│   │   ├── hooks/
+│   │   │
+│   │   ├── services/
+│   │   │   ├── api/
+│   │   │   └── mock/
+│   │   │
+│   │   ├── context/
+│   │   ├── constants/
+│   │   ├── data/
+│   │   ├── utils/
+│   │   ├── types/
+│   │   ├── assets/
+│   │   └── styles/
+│   │
+│   ├── package.json
+│   ├── vite.config.ts
+│   └── tailwind.config.js
+│
+├── backend/
+│
+│   ├── app/
+│   │   ├── api/
+│   │   ├── services/
+│   │   ├── schemas/
+│   │   ├── models/
+│   │   ├── database/
+│   │   ├── core/
+│   │   └── utils/
+│   │
+│   ├── ml/
+│   │   ├── valuation/
+│   │   ├── fraud/
+│   │   ├── ocr/
+│   │   └── datasets/
+│   │
+│   ├── tests/
+│   ├── requirements.txt
+│   └── main.py
+│
+├── docs/
+│   ├── architecture/
+│   ├── api/
+│   ├── datasets/
+│   ├── design/
+│   ├── pitch/
+│   └── presentations/
+│
+├── .github/
+│   └── workflows/
+│
+├── README.md
+├── context.md
+├── .gitignore
+└── LICENSE
+```
 
 ---
 
 # Frontend Architecture Rules
 
-Use:
-
-* React
-* Vite
-* Tailwind CSS
-* React Router
-* Framer Motion
-* Recharts
-
-Architecture:
+Architecture Flow:
 
 Pages → Features → Components → UI
 
-Business logic should remain outside presentation components.
+Keep business logic outside presentation components.
 
-Keep components focused and reusable.
+Pages should orchestrate.
 
-Avoid monolithic files.
+Components should render.
+
+Services should fetch data.
+
+Utilities should contain reusable helper logic.
 
 ---
 
@@ -90,64 +257,20 @@ Avoid monolithic files.
 
 Always:
 
-* Use functional components
+* Use functional React components
 * Use hooks
-* Use composition over duplication
-* Create reusable components
+* Prefer composition over duplication
+* Create reusable UI primitives
 * Use TypeScript-friendly patterns
-* Keep code maintainable
+* Keep components maintainable
 
 Avoid:
 
+* Massive page files
 * Deep prop drilling
-* Massive page components
-* Hardcoded repeated layouts
 * Inline business logic
-
----
-
-# Folder Structure
-
-src/
-
-app/
-routes/
-
-pages/
-Landing/
-PropertyAnalysis/
-Dashboard/
-Analytics/
-FraudDetection/
-Reports/
-Settings/
-
-components/
-
-ui/
-cards/
-charts/
-forms/
-navigation/
-maps/
-reports/
-
-layouts/
-
-hooks/
-
-services/
-
-api/
-mock/
-
-data/
-
-utils/
-
-types/
-
-assets/
+* Hardcoded repeated layouts
+* Copy-paste components
 
 ---
 
@@ -158,17 +281,34 @@ Prefer:
 * React Context
 * Custom Hooks
 
-Do not introduce Redux unless absolutely necessary.
+Do NOT introduce:
+
+* Redux
+* Zustand
+* MobX
+
+Unless explicitly required later.
 
 ---
 
 # Mock First Development
 
-Build the frontend assuming backend APIs are unavailable.
+Build everything using realistic mock data.
 
-Every page should work with realistic mock data.
+Every page should function without a backend.
 
-Backend integration should be a drop-in replacement later.
+Backend integration must be replaceable later without changing UI logic.
+
+Pages should never directly call fetch().
+
+Always use a service layer.
+
+Example:
+
+services/
+
+* api/propertyApi.ts
+* mock/mockPropertyApi.ts
 
 ---
 
@@ -177,16 +317,18 @@ Backend integration should be a drop-in replacement later.
 Priority Order:
 
 1. Pixel-perfect UI
-2. Complete navigation
-3. Mock data integration
-4. Smooth user experience
-5. Reusable components
-6. Code quality
-7. Performance optimization
+2. Complete Navigation
+3. Mock Data Integration
+4. Smooth UX
+5. Reusable Components
+6. Code Quality
+7. Performance Optimization
 
-For the initial implementation, prioritize shipping working screens over perfect abstraction.
+For the first implementation:
 
-Refactoring can happen after all screens are implemented.
+Ship working screens quickly.
+
+Refactor later.
 
 ---
 
@@ -194,17 +336,21 @@ Refactoring can happen after all screens are implemented.
 
 Use Framer Motion sparingly.
 
-Animations should communicate state.
-
-Examples:
+Allowed:
 
 * Page transitions
-* Dashboard load
-* Counter animations
-* Hover states
-* Loading indicators
+* Dashboard entrance animations
+* Loading states
+* Hover interactions
+* Animated counters
 
-Avoid decorative animations.
+Avoid:
+
+* Decorative motion
+* Excessive effects
+* Long animation sequences
+
+Animations should communicate state.
 
 ---
 
@@ -215,32 +361,36 @@ The UI should feel:
 * Premium
 * Government-grade
 * Financial-grade
-* Data-heavy
+* Data-centric
 * Modern
 
 Keywords:
 
 Trust
+
 Accuracy
+
 Intelligence
-Risk Awareness
+
 Analytics
+
+Risk Awareness
 
 Avoid:
 
-* Startup clichés
 * Neon themes
 * Gaming aesthetics
+* Startup clichés
 * Excessive gradients
-* Oversized illustrations
+* Cartoon styling
 
 ---
 
 # Core Reusable Components
 
-Build reusable primitives first.
+Build these first:
 
-Examples:
+UI
 
 * Button
 * Card
@@ -250,11 +400,22 @@ Examples:
 * Select
 * Toggle
 * Slider
+* Tabs
+* Tooltip
+
+Business Components
+
+* Sidebar
+* Navbar
 * StatCard
+* MetricCard
 * RiskCard
-* ConfidenceMeter
 * PriceCard
+* ConfidenceMeter
+* ProgressGauge
 * AnalyticsChart
+* PropertyMap
+* UploadZone
 * ReportCard
 
 Pages should compose these components.
@@ -269,11 +430,34 @@ Include:
 
 * Maharashtra villages
 * Talukas
-* Land prices
+* Land classifications
+* Soil types
+* Market prices
+* Ownership information
 * Risk scores
-* Ownership data
 
-All mock responses should appear believable during judging.
+All generated data should feel believable during judging.
+
+---
+
+# Copilot Generation Rules
+
+When generating code:
+
+* Implement only features visible in the provided designs.
+* Do not invent authentication systems.
+* Do not invent admin dashboards.
+* Do not invent role management.
+* Do not invent enterprise settings.
+* Do not create microservices.
+* Do not create unnecessary abstractions.
+* Do not add backend code unless explicitly requested.
+
+If information is missing:
+
+Use sensible mock data.
+
+Prioritize visual accuracy.
 
 ---
 
@@ -285,9 +469,11 @@ The project is successful if a judge can:
 2. Analyze a property.
 3. Receive valuation results.
 4. Understand the risks.
-5. Explore supporting analytics.
-6. Download a report.
+5. Explore analytics.
+6. View fraud insights.
+7. Open location intelligence.
+8. Download a report.
 
-Without needing an explanation from the team.
+Without needing a verbal explanation.
 
 The product should tell its own story.
