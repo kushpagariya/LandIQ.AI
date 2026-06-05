@@ -31,18 +31,6 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-macOS / Linux:
-
-```bash
-source .venv/bin/activate
-```
-
-PowerShell:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
 Health check:
 
 ```bash

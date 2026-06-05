@@ -193,7 +193,7 @@ LandIQ-AI/
 │   │
 │   ├── package.json
 │   ├── vite.config.ts
-│   └── frontend/tailwind.config.ts
+│   └── tailwind.config.js
 │
 ├── backend/
 │
@@ -228,7 +228,7 @@ LandIQ-AI/
 │   └── workflows/
 │
 ├── README.md
-├── docs/context.md
+├── context.md
 ├── .gitignore
 └── LICENSE
 ```

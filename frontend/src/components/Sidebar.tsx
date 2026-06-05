@@ -7,23 +7,6 @@ interface SidebarProps {
 
 export default function Sidebar({ activePage }: SidebarProps) {
   const navigate = useNavigate()
-  const normalizePage = (value: string) => value.replaceAll('-', '')
-
-  const handleSupportClick = () => {
-    try {
-      window.location.href = 'mailto:support@landiq.ai?subject=LandIQ%20AI%20Support'
-    } catch (error) {
-      console.error('Unable to open support flow', error)
-    }
-  }
-
-  const handleSignOut = () => {
-    try {
-      navigate('/')
-    } catch (error) {
-      console.error('Unable to sign out', error)
-    }
-  }
 
   const menuItems = [
     { icon: BarChart3, label: 'Dashboard', path: '/dashboard' },
@@ -65,9 +48,8 @@ export default function Sidebar({ activePage }: SidebarProps) {
           <button
             key={item.path}
             onClick={() => navigate(item.path)}
-            aria-label={item.label}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-              normalizePage(activePage) === normalizePage(item.path.slice(1))
+              activePage === item.path.slice(1) || activePage === item.path.slice(1).replace('-', '')
                 ? 'bg-blue-100 text-blue-600'
                 : 'text-gray-600 hover:bg-gray-100'
             }`}
@@ -80,21 +62,11 @@ export default function Sidebar({ activePage }: SidebarProps) {
 
       {/* Bottom Menu */}
       <div className="border-t border-gray-200 p-4 space-y-2">
-        <button
-          type="button"
-          onClick={handleSupportClick}
-          aria-label="Open support"
-          className="w-full flex items-center gap-3 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
-        >
+        <button className="w-full flex items-center gap-3 px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition">
           <HelpCircle className="w-5 h-5" />
           <span className="text-sm font-medium">Support</span>
         </button>
-        <button
-          type="button"
-          onClick={handleSignOut}
-          aria-label="Sign out"
-          className="w-full flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-        >
+        <button className="w-full flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition">
           <LogOut className="w-5 h-5" />
           <span className="text-sm font-medium">Sign Out</span>
         </button>
